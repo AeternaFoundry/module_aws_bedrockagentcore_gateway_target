@@ -320,6 +320,25 @@ resource "aws_bedrockagentcore_gateway_target" "bedrockagentcore_gateway_targets
             content {
               endpoint     = mcp_server.value.endpoint
               listing_mode = mcp_server.value.listing_mode
+              dynamic "mcp_tool_schema" {
+                for_each = mcp_server.value.mcp_tool_schema != null ? mcp_server.value.mcp_tool_schema : []
+                content {
+                  dynamic "inline_payload" {
+                    for_each = mcp_tool_schema.value.inline_payload != null ? mcp_tool_schema.value.inline_payload : []
+                    content {
+                      payload = inline_payload.value.payload
+                    }
+                  }
+                  dynamic "s3" {
+                    for_each = mcp_tool_schema.value.s3 != null ? mcp_tool_schema.value.s3 : []
+                    content {
+                      bucket_owner_account_id = s3.value.bucket_owner_account_id
+                      uri                     = s3.value.uri
+                    }
+                  }
+                }
+              }
+              resource_priority = mcp_server.value.resource_priority
             }
           }
           dynamic "open_api_schema" {

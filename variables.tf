@@ -160,6 +160,13 @@ Optional:
             - mcp_server (optional, block):
                 - endpoint (required)
                 - listing_mode (optional)
+                - mcp_tool_schema (optional, block):
+                    - inline_payload (optional, block):
+                        - payload (required)
+                    - s3 (optional, block):
+                        - bucket_owner_account_id (optional)
+                        - uri (required)
+                - resource_priority (optional)
             - open_api_schema (optional, block):
                 - inline_payload (optional, block):
                     - payload (required)
@@ -370,6 +377,16 @@ EOT
         mcp_server = optional(list(object({
           endpoint     = string
           listing_mode = optional(string)
+          mcp_tool_schema = optional(list(object({
+            inline_payload = optional(list(object({
+              payload = string
+            })))
+            s3 = optional(list(object({
+              bucket_owner_account_id = optional(string)
+              uri                     = string
+            })))
+          })))
+          resource_priority = optional(number)
         })))
         open_api_schema = optional(list(object({
           inline_payload = optional(list(object({
